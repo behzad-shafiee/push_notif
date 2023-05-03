@@ -2,11 +2,24 @@ const net = require('net');
 
 const server = net.createServer((socket) => {
   console.log('Client connected');
-  socket.write('<stream>');
+
   socket.on('data', (data) => {
-    console.log('Received message:', data.toString());
-    socket.write('<message>Hi from server</message>');
+    const message = data.toString();
+
+    if (message.includes('<stream:stream')) {
+      console.log('Stream tag received');
+      socket.write('<?xml version="1.0"?>' +
+                   '<stream:stream xmlns:stream="http://etherx.jabber.org/streams" version="1.0" xmlns="jabber:client">');
+    } else if (message.includes('</stream:stream>')) {
+      console.log('Stream end tag received');
+      socket.write('</stream:stream>');
+      socket.end();
+    } else {
+      console.log('Received message:', message);
+      socket.write(`<message>Hi from server</message>`);
+    }
   });
+
   socket.on('close', () => {
     console.log('Client disconnected');
   });
@@ -23,30 +36,34 @@ server.listen(5222, () => {
 
 
 
+//#######################################################################################
 
 
 
+// const net = require('net');
+
+// const server = net.createServer((socket) => {
+//   console.log('Client connected');
+//   socket.write('<stream>');
+//   socket.on('data', (data) => {
+//     console.log('Received message:', data.toString());
+//     socket.write('<message>Hi from server</message>');
+//   });
+//   socket.on('close', () => {
+//     console.log('Client disconnected');
+//   });
+// });
+
+// server.on('error', (err) => {
+//   console.error('Error occurred:', err);
+// });
+
+// server.listen(5222, () => {
+//   console.log('Server listening on port 5222');
+// });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//#######################################################################################
 
 // const net = require('net');
 

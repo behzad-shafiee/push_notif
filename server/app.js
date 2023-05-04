@@ -66,15 +66,9 @@ server.listen(5222, () => {
 //#######################################################################################
 
 // const net = require('net');
-
-
 // const xmlParser = require('xml2json');
-
-
 // const server = net.createServer(socket => {
 //     console.log('Client connected.');
-
-
 //     socket.on('data', data => {
 //         console.log(data);
 //         const xml = data.toString();

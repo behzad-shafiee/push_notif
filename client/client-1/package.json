@@ -1,15 +1,13 @@
 {
   "scripts": {
-    "build": "npx tsc ./src/app.js",
-    "start": "node dist/app.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/app.js\""
+    "build": "npx tsc ./src/client.1.ts",
+    "start": "node dist/client.1.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/client.1.js\""
   },
   "dependencies": {
     "express": "^4.18.2",
     "install": "^0.13.0",
-    "ltx": "^3.0.0",
     "net": "^1.0.2",
-    "node-xmpp-client": "^3.2.0",
     "npm": "^9.6.6",
     "socket.io": "^4.6.1",
     "typescript": "^5.0.4",

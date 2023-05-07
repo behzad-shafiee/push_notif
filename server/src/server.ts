@@ -1,4 +1,7 @@
 const net = require( 'net' );
+const xml2js = require('xml2js');
+const parser = new xml2js.Parser();
+
 let database: any = {}
 let index = 0
 const server = net.createServer( ( socket: any ) =>
@@ -34,36 +37,40 @@ const server = net.createServer( ( socket: any ) =>
 
             if ( type[ 1 ] === 'set' && username[ 1 ] && password[ 1 ] )
             {
-                for ( let i = 0; i < database.length; i++ )
+                let error;
+                for ( const key in database )
                 {
-                    console.log( '*************' );
-
-                    console.log( database[ i ].username == username[ 0 ] );
-
-                    if ( database[ i ].username == username[ 1 ] )
+                    if ( database[ key ].username == username[ 1 ] )
                     {
                         console.log( 'Duplicate username' );
                         // send back an error response
-                        const response = `<iq type="error" id="${ id }">
+                        error = `<iq type="error" id="${ id }">
                                   <error type="cancel">
                                     <feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/>
                                   </error>
                                 </iq>`;
-                        socket.write( response );
+                        socket.write( error );
                     }
                 }
+                if ( !error )
+                {
+                    const jid = xml.iq.query[ 0 ].register[ 0 ].jid[ 0 ];
+                    console.log( jid );
 
-                database[ 'user' + index ] = {
-                    username: username[ 1 ],
-                    password: password[ 1 ]
+
+                    database[ 'user' + index ] = {
+                        username: username[ 1 ],
+                        password: password[ 1 ]
+                    }
+                    console.log( database );
+                    index++
+                    console.log( 'Registering user:', username[ 1 ] );
+                    // TODO: add code to register the user
+                    // send back a response
+                    const response = `<iq type="result" id="${ id }"/>`;
+                    socket.write( response );
                 }
-                console.log( database );
-                index++
-                console.log( 'Registering user:', username[ 1 ] );
-                // TODO: add code to register the user
-                // send back a response
-                const response = `<iq type="result" id="${ id }"/>`;
-                socket.write( response );
+
             } else
             {
                 console.log( 'Invalid request' );
@@ -75,9 +82,6 @@ const server = net.createServer( ( socket: any ) =>
                             </iq>`;
                 socket.write( response );
             }
-
-
-
         }
     } )
 
